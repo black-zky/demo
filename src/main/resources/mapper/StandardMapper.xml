@@ -120,4 +120,21 @@
       packagepath = #{packagepath,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
+
+  <select id="selectByPage" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from standard
+    <where>
+      <if test="vo.zhname!=null and vo.zhname!=''">
+        and zhname like concat('%'+#{vo.zhname}'%')
+      </if>
+      <if test="vo.begin!=null">
+        and releaseDate like <![CDATA[ >= ]]> #{vo.begin}
+      </if>
+      <if test="vo.end!=null">
+        and releaseDate like <![CDATA[ <= ]]> #{vo.end}
+      </if>
+    </where>
+  </select>
 </mapper>
