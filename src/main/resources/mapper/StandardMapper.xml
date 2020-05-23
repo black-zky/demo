@@ -127,14 +127,22 @@
     from standard
     <where>
       <if test="vo.zhname!=null and vo.zhname!=''">
-        and zhname like concat('%'+#{vo.zhname}'%')
+        and zhname like concat('%',#{vo.zhname},'%')
       </if>
       <if test="vo.begin!=null">
-        and releaseDate like <![CDATA[ >= ]]> #{vo.begin}
+        and releasedate <![CDATA[ >= ]]> #{vo.begin}
       </if>
       <if test="vo.end!=null">
-        and releaseDate like <![CDATA[ <= ]]> #{vo.end}
+        and impldate <![CDATA[ <= ]]> #{vo.end}
       </if>
     </where>
   </select>
+
+  <delete id="deleteBatch">
+    delete from standard
+    where id in
+    <foreach collection="array" item="id" open="(" close=")" separator=",">
+      #{id}
+    </foreach>
+  </delete>
 </mapper>

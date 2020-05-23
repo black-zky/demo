@@ -3,6 +3,9 @@ package com.woniu.dao;
 import com.woniu.pojo.Standard;
 import com.woniu.vo.StandardVo;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 public interface StandardMapper {
     int deleteByPrimaryKey(Integer id);
@@ -17,5 +20,7 @@ public interface StandardMapper {
 
     int updateByPrimaryKey(Standard record);
 
-    Standard selectByPage(int currentPage, int pageSize,@Param("vo") StandardVo vo);
+    List<Standard> selectByPage(int currentPage, int pageSize, @Param("vo") StandardVo vo);
+
+    int deleteBatch(Integer[] ids);
 }
