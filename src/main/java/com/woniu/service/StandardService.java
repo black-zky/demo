@@ -1,5 +1,6 @@
 package com.woniu.service;
 
+import com.github.pagehelper.PageInfo;
 import com.woniu.pojo.Standard;
 import com.woniu.vo.StandardVo;
 import org.springframework.stereotype.Service;
@@ -10,7 +11,7 @@ import java.util.List;
 public interface StandardService {
     Standard findById(Integer id);
 
-    List<Standard> findByPage(int currentPage, int pageSize, StandardVo vo);
+    PageInfo findByPage(int currentPage, int pageSize, StandardVo vo);
 
     boolean deleteBatch(Integer[] ids);
 

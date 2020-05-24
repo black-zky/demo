@@ -18,7 +18,7 @@ public class SpringContextHolder implements ApplicationContextAware {
     }
 
     //发布事件
-    public void publishEvent(Log log){
+    public static void publishEvent(Log log){
         applicationContext.publishEvent(new SysLogEvent(log));
     }
 }

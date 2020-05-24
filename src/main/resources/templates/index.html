@@ -1,10 +1,120 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <script src="https://cdn.bootcdn.net/ajax/libs/vue/2.6.11/vue.js"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/axios/0.19.2/axios.min.js"></script>
 </head>
 <body>
-主页
+<div id="app">
+    中文名称 ： <input type="text" v-model="zhname">
+    发布日期： <input type="text" size="12" v-model="begin"> -
+    <input type="text" size="12" v-model="end">
+    <input type="button" value="提交检索" @click="list(1)">
+    <input type="button" value="新增标准" @click="openDialog">
+<table border="1">
+    <tr>
+        <td>
+            <input type="checkbox">
+        </td>
+        <td>标准号</td>
+        <td>中文名称</td>
+        <td>版本</td>
+        <td>发布日期</td>
+        <td>实施日期</td>
+        <td>操作</td>
+    </tr>
+    <tr v-for="item in res.list">
+        <td>
+            <input type="checkbox" :value="item.id">
+        </td>
+        <td>{{item.stdnum}}</td>
+        <td>{{item.zhname}}</td>
+        <td>{{item.version}}</td>
+        <td>{{item.releasedate}}</td>
+        <td>{{item.impldate}}</td>
+        <td>
+            <a :href="'/download/'+item.id" >下载</a>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="7">
+            <a href="#" @click.pervent="list(1)">首页</a>
+            <a href="#" v-if="res.hasPreviousPage" @click.pervent="list(res.prePage)"> 上一页</a>
+            <span v-if="!res.hasPreviousPage">上一页</span>
+            <a href="#" v-if="res.hasNextPage" @click.pervent="list(res.nextPage)"> 下一页</a>
+            <span v-if="!res.hasNextPage">下一页</span>
+            <a href="#" @click.pervent="list(res.pages)">尾页</a>
+        </td>
+    </tr>
+</table>
+
+        <div id="model" style="display: none;width: 400px;height: 400px;position: absolute;left: 0px;right: 0px;
+        margin: 0px auto;top:10%;background-color: #cccccc">
+            <form>
+
+            标准号： <input type="text" name="stdnum"> <br>
+            附件： <input type="file"> <br>
+            <input type="button" value="保存" @click="create">
+            </form>
+        </div>
+
+
+</div>
+
+
+<script>
+    var vue = new Vue({
+        el:'#app',
+        data:{
+            res:'',
+            zhname:'',
+            begin:'',
+            end:''
+        },
+        created:function () {
+            this.list();
+        },
+        methods:{
+            list:function (page) {
+                var _this = this;
+                axios.get("/standards",{params:{currentPage:page,zhname:_this.zhname,begin:_this.begin,end:_this.end}}).then(function (value) {
+                    _this.res = value.data.data;
+                })
+            },
+            openDialog:function () {
+                document.querySelector("#model").style.display = "block";
+            },
+            create:function () {
+                var formDate = new window.FormData();
+                formDate.append("stdnum",document.querySelector("[name=stdnum]").value); //标准号
+                formDate.append("file",document.querySelector("[type=file]").files[0]);//上传的文件
+                var _this = this;
+                axios.post("/standards",formDate,{"Content-Type":"multipart/form-data"}).then(function (value) {
+                    if(value.data.code == 200){
+                        alert('添加成功');
+                        _this.list(_this.res.pageNum);//重新加载 当前页数据,
+                        document.querySelector("#model").style.display="none";
+                        //重置表达
+                        document.forms[0].reset();
+                    }
+                })
+            }
+        }
+    });
+</script>
+
+
+
+
+
+
+
+
+
+
+
 </body>
 </html>

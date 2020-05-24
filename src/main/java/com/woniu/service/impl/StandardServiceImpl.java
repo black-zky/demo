@@ -1,5 +1,6 @@
 package com.woniu.service.impl;
 
+import com.github.pagehelper.PageInfo;
 import com.woniu.dao.StandardMapper;
 import com.woniu.pojo.Standard;
 import com.woniu.service.StandardService;
@@ -30,9 +31,10 @@ public class StandardServiceImpl implements StandardService {
     }
 
     @Override
-    public List<Standard> findByPage(int currentPage, int pageSize, StandardVo vo) {
+    public PageInfo findByPage(int currentPage, int pageSize, StandardVo vo) {
         List<Standard> standards = standardMapper.selectByPage(currentPage,pageSize,vo);
-        return null;
+        PageInfo pageInfo = new PageInfo(standards);
+        return pageInfo;
     }
 
     @Override
